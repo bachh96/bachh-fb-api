@@ -12,14 +12,14 @@
   </head>
   <body>
     <?php
-		$url_get = "https://graph.facebook.com/v9.0/100004511048197_1636017283225291?fields=shares,reactions.summary(total_count)&access_token=EAAAAZAw4FxQIBAHRaauv6S0L7ZAPZBH2SWjHHNZAnOqzDPjNb1iBK1LfKZCtX94uahrCfRswDQmSwdZCJnCyVX2heSqsHFYNTFuJuvj0iVrl7dVSEm3L1ghETQOtxC6rKltZBfJaIYLn6zEKZA32rJg1uSU97HLgMJDFVO2bLjT6gwZDZD";
+//		$url_get = "https://graph.facebook.com/v9.0/100004511048197_1636017283225291?fields=shares,reactions.summary(total_count)&access_token=EAAAAZAw4FxQIBAFhBi5ySgEdZAOiRYWh3m6C7r3z3sy1Y5bhZCaISBONNH2JrGWTGQueTg99JUUFaqHBZCp80GocNQVwnhmZBOHbu9QfDCzbyNW4jy1eD1PVS6z9lcFYJGGaZClgGFpw9xZCZAEJxSDOkjtV2fR3efxPl4UZBZCMoa9tzf1WUMzDZCQiQsrAEZCmZBZCYZD";
+    $url_main = 'https://m.facebook.com/story.php?story_fbid=463782491424401&id=100033779627132';
+    $url_get = "https://graph.facebook.com/v10.0/100033779627132_463782491424401/comments?access_token=EAAAAZAw4FxQIBAFhBi5ySgEdZAOiRYWh3m6C7r3z3sy1Y5bhZCaISBONNH2JrGWTGQueTg99JUUFaqHBZCp80GocNQVwnhmZBOHbu9QfDCzbyNW4jy1eD1PVS6z9lcFYJGGaZClgGFpw9xZCZAEJxSDOkjtV2fR3efxPl4UZBZCMoa9tzf1WUMzDZCQiQsrAEZCmZBZCYZD";
 		$c = curl_init($url_get);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		$json_string = curl_exec($c);
 		$array = json_decode($json_string, true);
-		//$array_data = $array["data"];
-		var_dump($array);
-		die();
+		$array_data = $array["data"];
 	?>
 
 	<button onclick="tableToExcel('tblData', 'W3C Example Table')">Export Table Data To Excel File</button>
