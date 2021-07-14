@@ -1,0 +1,29 @@
+.wrapper {
+  width: 100%;
+  max-width: 960px;
+  margin: 30px auto auto auto;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+h3 {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+h3 > span {
+  color: red;
+}
+
+input {
+  width: 100%;
+}
+
+table .color-red {
+  color: red;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=style.css.map */
