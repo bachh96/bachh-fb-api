@@ -56,12 +56,11 @@
                     $accessToken = "EAAAAZAw4FxQIBAC8LlrIC39B5FrArpZACBNRvxCnRjZCqpgzjgKOsjzMa0E9GTBavoZCv2RWiZBtx28HVdHzRmJDNbNSdVmhvpfI2O8V9ZA8W82LQDUAoM87ZAjCXy62jUI0bbKHPp9TFER3cpNZBXfZCPiDzNq5RMIfcz4KwqFiYqAIZAEzYBRGAYuRjiI2Ym8q0ZD";
                 }
 
-                foreach ($allUrl as $item) :
-                    if(!empty($item)) :
+                foreach ($allUrl as $url) :
+                    if(!empty($url)) :
                     // lấy id group theo url
-                    $url = $item;
                     $urlArr = explode("/posts/",$url);
-                    $groupApi = "https://graph.facebook.com/v11.0?id=". $urlArr[0] . "&access_token=".$accessToken."";
+                    $groupApi = "https://graph.facebook.com/v11.0?id=". preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $urlArr[0]) . "&access_token=".$accessToken."";
                     $array = json_decode(file_get_contents($groupApi), true);
                     $groupId = $array['id'];
                     // lấy id bài viết
@@ -73,51 +72,57 @@
                         $filter = "toplevel";
                     }
 
-                    $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=1000&access_token=$accessToken";
-                    $commentResponse = json_decode(file_get_contents($commentApi), true);
-                    $commentHasTextNum = 0;
-                    foreach ($commentResponse['data'] as $item2) {
-                        if(preg_match('/[a-zA-Z0-9]/',$item2['message'])) {
-                            $commentHasTextNum++;
+                    if(isset($_POST["countcomment"]) && $_POST["countcomment"] === "yes") {
+                        $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=1000&access_token=$accessToken";
+                        $commentResponse = json_decode(file_get_contents($commentApi), true);
+                        $commentHasTextNum = 0;
+                        foreach ($commentResponse['data'] as $item2) {
+                            if(preg_match('/[a-zA-Z0-9]/',$item2['message'])) {
+                                $commentHasTextNum++;
+                            }
                         }
                     }
 
-                    $shareApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=shares&access_token=$accessToken";
-                    $shareResponse = json_decode(file_get_contents($shareApi), true);
+                    if(isset($_POST["countshare"]) && $_POST["countshare"] === "yes") {
+                        $shareApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=shares&access_token=$accessToken";
+                        $shareResponse = json_decode(file_get_contents($shareApi), true);
+                    }
 
-                    $reactionApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.summary(total_count)&access_token=$accessToken";
-                    $reactionResponse = json_decode(file_get_contents($reactionApi), true);
+                    if(isset($_POST["countreaction"]) && $_POST["countreaction"] === "yes") {
+                        $reactionApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.summary(total_count)&access_token=$accessToken";
+                        $reactionResponse = json_decode(file_get_contents($reactionApi), true);
 
-                    $likeApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=likes.summary(true)&access_token=$accessToken";
-                    $likeResponse = json_decode(file_get_contents($likeApi), true);
+                        $likeApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=likes.summary(true)&access_token=$accessToken";
+                        $likeResponse = json_decode(file_get_contents($likeApi), true);
 
-                    $loveApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token=$accessToken";
-                    $loveResponse = json_decode(file_get_contents($loveApi), true);
+                        $loveApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token=$accessToken";
+                        $loveResponse = json_decode(file_get_contents($loveApi), true);
 
-                    $wowApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(WOW).limit(0).summary(total_count)&access_token=$accessToken";
-                    $wowResponse = json_decode(file_get_contents($wowApi), true);
+                        $wowApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(WOW).limit(0).summary(total_count)&access_token=$accessToken";
+                        $wowResponse = json_decode(file_get_contents($wowApi), true);
 
-                    $hahaApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(HAHA).limit(0).summary(total_count)&access_token=$accessToken";
-                    $hahaResponse = json_decode(file_get_contents($hahaApi), true);
+                        $hahaApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(HAHA).limit(0).summary(total_count)&access_token=$accessToken";
+                        $hahaResponse = json_decode(file_get_contents($hahaApi), true);
 
-                    $sadApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(SAD).limit(0).summary(total_count)&access_token=$accessToken";
-                    $sadResponse = json_decode(file_get_contents($sadApi), true);
+                        $sadApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(SAD).limit(0).summary(total_count)&access_token=$accessToken";
+                        $sadResponse = json_decode(file_get_contents($sadApi), true);
 
-                    $angryApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(ANGRY).limit(0).summary(total_count)&access_token=$accessToken";
-                    $angryResponse = json_decode(file_get_contents($angryApi), true);
+                        $angryApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(ANGRY).limit(0).summary(total_count)&access_token=$accessToken";
+                        $angryResponse = json_decode(file_get_contents($angryApi), true);
+                    }
             ?>
             <tr>
-                <td scope="row" style="font-weight: 400;"><?php echo $item; ?></td>
-                <td class="color-blue"><?php echo $commentResponse['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $commentHasTextNum; ?></td>
-                <td class="color-blue"><?php echo $shareResponse['shares']['count']?></td>
-                <td class="color-blue"><?php echo $reactionResponse['reactions']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $likeResponse['likes']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $loveResponse['reactions']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $wowResponse['reactions']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $hahaResponse['reactions']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $sadResponse['reactions']['summary']['total_count']; ?></td>
-                <td class="color-blue"><?php echo $angryResponse['reactions']['summary']['total_count']; ?></td>
+                <td scope="row" style="font-weight: 400;"><?php echo $url; ?></td>
+                <td class="color-blue"><?php if(isset($commentResponse)) echo $commentResponse['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($commentHasTextNum)) echo $commentHasTextNum; ?></td>
+                <td class="color-blue"><?php if(isset($shareResponse)) echo $shareResponse['shares']['count']?></td>
+                <td class="color-blue"><?php if(isset($reactionResponse)) echo $reactionResponse['reactions']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($likeResponse)) echo $likeResponse['likes']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($loveResponse)) echo $loveResponse['reactions']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($wowResponse)) echo $wowResponse['reactions']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($hahaResponse)) echo $hahaResponse['reactions']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($sadResponse)) echo $sadResponse['reactions']['summary']['total_count']; ?></td>
+                <td class="color-blue"><?php if(isset($angryResponse)) echo $angryResponse['reactions']['summary']['total_count']; ?></td>
             </tr>
             <?php
                 endif;

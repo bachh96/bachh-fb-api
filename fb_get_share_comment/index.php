@@ -28,15 +28,41 @@
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
-            <p><label>Nhập từ file CSV</label><input type="file" name="csvfile"></p>
+            <p><label><b>Nhập từ file CSV</b></label><input type="file" name="csvfile"></p>
+            <p><b>Để giảm truy vấn nhanh hơn bạn có thể chọn tuỳ chọn đếm cần thiết:</b></p>
             <p>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="allcomment" name="allcomment" value="yes">
+                    <input class="form-check-input" type="checkbox" id="countcomment" name="countcomment" value="yes" checked="checked">
+                    <label class="form-check-label" for="countcomment">
+                        Đếm comment
+                    </label>
+                </div>
+            </p>
+            <p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="allcomment" name="allcomment" value="yes" checked="checked">
                     <label class="form-check-label" for="allcomment">
                         Bao gồm bình luận trả lời
                     </label>
                 </div>
             </p>
+            <p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="countshare" name="countshare" value="yes" checked="checked">
+                    <label class="form-check-label" for="countshare">
+                        Đếm share
+                    </label>
+                </div>
+            </p>
+            <p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="countreaction" name="countreaction" value="yes" checked="checked">
+                    <label class="form-check-label" for="countreaction">
+                        Đếm lượt bày tỏ cảm xúc
+                    </label>
+                </div>
+            </p>
+        
             <p><button type="submit" class="btn btn-warning">Lấy dữ liệu</button></p>
         </form>
 
