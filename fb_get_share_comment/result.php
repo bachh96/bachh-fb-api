@@ -88,12 +88,14 @@
                         $shareResponse = json_decode(file_get_contents($shareApi), true);
                     }
 
+                    if(isset($_POST["countlike"]) && $_POST["countlike"] === "yes") {
+                        $likeApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=likes.summary(true)&access_token=$accessToken";
+                        $likeResponse = json_decode(file_get_contents($likeApi), true);
+                    }
+
                     if(isset($_POST["countreaction"]) && $_POST["countreaction"] === "yes") {
                         $reactionApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.summary(total_count)&access_token=$accessToken";
                         $reactionResponse = json_decode(file_get_contents($reactionApi), true);
-
-                        $likeApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=likes.summary(true)&access_token=$accessToken";
-                        $likeResponse = json_decode(file_get_contents($likeApi), true);
 
                         $loveApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token=$accessToken";
                         $loveResponse = json_decode(file_get_contents($loveApi), true);

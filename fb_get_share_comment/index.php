@@ -56,6 +56,14 @@
             </p>
             <p>
                 <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="countlike" name="countlike" value="yes" checked="checked">
+                    <label class="form-check-label" for="countlike">
+                        Đếm lượt like
+                    </label>
+                </div>
+            </p>
+            <p>
+                <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="countreaction" name="countreaction" value="yes" checked="checked">
                     <label class="form-check-label" for="countreaction">
                         Đếm lượt bày tỏ cảm xúc
