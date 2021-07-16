@@ -29,7 +29,7 @@
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><label><b>Nhập từ file CSV</b></label><input type="file" name="csvfile"></p>
-            <p><b>Để giảm truy vấn nhanh hơn bạn có thể chọn tuỳ chọn đếm cần thiết:</b></p>
+            <p><b>Để truy vấn nhanh hơn bạn có thể chọn tuỳ chọn đếm cần thiết:</b></p>
             <p>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="countcomment" name="countcomment" value="yes" checked="checked">
