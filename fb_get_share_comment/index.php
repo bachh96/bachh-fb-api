@@ -18,7 +18,7 @@
         <h2 class="text-center">Đếm comment, share, lượt bày tỏ cảm xúc, số like của bài viết Facebook</h2>
         <p class="text-center base-fb">(Dựa trên Facebook Graph API Version 11.0)</p>
         <h3>Nhập link bài viết có dạng: <span>https://www.facebook.com/topcomments.vn/posts/3712936208964487</span></h3>
-        <form action="result.php" method="post">
+        <form action="result.php" method="post" enctype="multipart/form-data">
             <p>
                 <input type="text" name="accesstoken" placeholder="Nhập Access Token (có thể bỏ qua)" class="form-control">
                 <span style="font-size: 12px;">Truy cập: <a href="https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed" target="_blank">https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed</a> -> tìm kiếm "EAA" -> copy chuỗi và dán vào đây.</span>
@@ -28,6 +28,7 @@
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
             <p><input type="text" name="url[]" placeholder="Nhập URL bài viết" class="form-control"></p>
+            <p><label>Nhập từ file CSV</label><input type="file" name="csvfile"></p>
             <p>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="allcomment" name="allcomment" value="yes">

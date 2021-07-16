@@ -36,13 +36,25 @@
             </thead>
             <tbody>
             <?php
+                $allUrl = [];
+
+                if (isset($_FILES['csvfile']) && !empty($_FILES['csvfile']['tmp_name']))
+                {
+                    $handle = fopen($_FILES['csvfile']['tmp_name'], "r");
+                    while (($line = fgetcsv($handle)) !== FALSE)
+                    {
+                        $allUrl[] = $line[0];
+                    }
+                    fclose($handle);
+                } else {
+                    $allUrl = $_POST['url'];
+                }
+
                 if(isset($_POST['accesstoken']) && !empty($_POST['accesstoken'])) {
                     $accessToken = $_POST['accesstoken'];
                 } else {
                     $accessToken = "EAAAAZAw4FxQIBAC8LlrIC39B5FrArpZACBNRvxCnRjZCqpgzjgKOsjzMa0E9GTBavoZCv2RWiZBtx28HVdHzRmJDNbNSdVmhvpfI2O8V9ZA8W82LQDUAoM87ZAjCXy62jUI0bbKHPp9TFER3cpNZBXfZCPiDzNq5RMIfcz4KwqFiYqAIZAEzYBRGAYuRjiI2Ym8q0ZD";
                 }
-
-                $allUrl = $_POST["url"];
 
                 foreach ($allUrl as $item) :
                     if(!empty($item)) :
