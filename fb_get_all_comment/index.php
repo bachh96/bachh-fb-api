@@ -24,7 +24,6 @@
                 <span style="font-size: 12px;">Truy cập: <a href="https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed" target="_blank">https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed</a> -> tìm kiếm "EAA" -> copy chuỗi và dán vào đây.</span>
             </p>
             <p><input type="text" name="url" placeholder="Nhập URL bài viết" class="form-control"></p>
-            <p><input type="number" name="limit" placeholder="Giới hạn (mặc định lấy nhiều nhất 5000 comment)" class="form-control"></p>
             <p>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="allcomment" name="allcomment" value="yes">

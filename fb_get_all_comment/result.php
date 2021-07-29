@@ -42,7 +42,7 @@
                 if(isset($_POST['accesstoken']) && !empty($_POST['accesstoken'])) {
                     $accessToken = $_POST['accesstoken'];
                 } else {
-                    $accessToken = "EAAAAZAw4FxQIBAC8LlrIC39B5FrArpZACBNRvxCnRjZCqpgzjgKOsjzMa0E9GTBavoZCv2RWiZBtx28HVdHzRmJDNbNSdVmhvpfI2O8V9ZA8W82LQDUAoM87ZAjCXy62jUI0bbKHPp9TFER3cpNZBXfZCPiDzNq5RMIfcz4KwqFiYqAIZAEzYBRGAYuRjiI2Ym8q0ZD";
+                    $accessToken = "EAAAAZAw4FxQIBALiZCXZCflf8jh26G3a6ZABxIGK5jCfhTc7rUZAq4eegsgJ2fpJ9SWPT92XiRj6HUf2QZAzOURMTMIkPE7x5ZB342OydaZCTmuGVRUwSnaOYm2uC7BZAu3qGKnClbW8FlrnUNNu6ZBt1PTZB3uBmB40ZBZANrz7ZAeiTM3ORZCsKP8Sn7l4mzdP8FJuG0ZD";
                 }
 
                 if(!empty($_POST["url"])) :
@@ -55,11 +55,7 @@
                     // lấy id bài viết
                     $postId = $urlArr[1];
 
-                    if(!empty($_POST["limit"])) {
-                        $limit = $_POST["limit"];
-                    } else {
-                        $limit = 5000;
-                    }
+                    $limit = 2000;
 
                     if(isset($_POST["allcomment"]) && $_POST["allcomment"] === "yes") {
                         $filter = "stream";
@@ -67,20 +63,39 @@
                         $filter = "toplevel";
                     }
 
-                    $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=$limit&access_token=$accessToken";
-                    $commentResponse = json_decode(file_get_contents($commentApi), true);
-                    foreach ($commentResponse['data'] as $comment) :
-                        if(!empty($comment['message'])) :
-                            $sheet->setCellValue('A' . $rowCount, $comment['id']);
-                            $sheet->setCellValue('B' . $rowCount, "\"" . $comment['message'] . "\"");
-                            $rowCount++;
+                    function getAllComment($after, $list = array()) {
+                        global $list, $groupId, $postId, $filter, $limit, $accessToken;
+                        if($after != '') {
+                            $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=$limit&after=$after&access_token=$accessToken";
+                        } else {
+                            $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=$limit&access_token=$accessToken";
+                        }
+                        $commentResponse = json_decode(file_get_contents($commentApi), true);
+                        $list[] = $commentResponse['data'];
+                        if(isset($commentResponse['paging']['cursors']['after'])) {
+                            $next = $commentResponse['paging']['cursors']['after'];
+                            getAllComment($next, $list);
+                        }
+
+                        return $list;
+                    }
+
+                    $data = getAllComment('');
+                    
+                    foreach ($data as $item) :
+                        foreach ($item as $comment) :
+                            if(!empty($comment['message'])) :
+                                $sheet->setCellValue('A' . $rowCount, $comment['id']);
+                                $sheet->setCellValue('B' . $rowCount, "\"" . $comment['message'] . "\"");
+                                $rowCount++;
             ?>
                 <tr>
                     <td scope="row" style="font-weight: 400;"><?php echo $comment['id']; ?></td>
                     <td class="color-blue"><?php echo $comment['message']; ?></td>
                 </tr>
             <?php
-                        endif;
+                            endif;
+                        endforeach;
                     endforeach;
                 endif;
             ?>

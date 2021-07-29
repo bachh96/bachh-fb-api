@@ -50,10 +50,35 @@
                     $allUrl = $_POST['url'];
                 }
 
+                if(isset($_POST["allcomment"]) && $_POST["allcomment"] === "yes") {
+                    $filter = "stream";
+                } else {
+                    $filter = "toplevel";
+                }
+
+                $limit = 2000;
+
                 if(isset($_POST['accesstoken']) && !empty($_POST['accesstoken'])) {
                     $accessToken = $_POST['accesstoken'];
                 } else {
-                    $accessToken = "EAAAAZAw4FxQIBAC8LlrIC39B5FrArpZACBNRvxCnRjZCqpgzjgKOsjzMa0E9GTBavoZCv2RWiZBtx28HVdHzRmJDNbNSdVmhvpfI2O8V9ZA8W82LQDUAoM87ZAjCXy62jUI0bbKHPp9TFER3cpNZBXfZCPiDzNq5RMIfcz4KwqFiYqAIZAEzYBRGAYuRjiI2Ym8q0ZD";
+                    $accessToken = "EAAAAZAw4FxQIBALiZCXZCflf8jh26G3a6ZABxIGK5jCfhTc7rUZAq4eegsgJ2fpJ9SWPT92XiRj6HUf2QZAzOURMTMIkPE7x5ZB342OydaZCTmuGVRUwSnaOYm2uC7BZAu3qGKnClbW8FlrnUNNu6ZBt1PTZB3uBmB40ZBZANrz7ZAeiTM3ORZCsKP8Sn7l4mzdP8FJuG0ZD";
+                }
+
+                function getAllComment($groupId, $postId, $after, $list = array()) {
+                    global $list, $filter, $limit, $accessToken;
+                    if($after != '') {
+                        $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=$limit&after=$after&access_token=$accessToken";
+                    } else {
+                        $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=$limit&access_token=$accessToken";
+                    }
+                    $commentResponse = json_decode(file_get_contents($commentApi), true);
+                    $list[] = $commentResponse['data'];
+                    if(isset($commentResponse['paging']['cursors']['after'])) {
+                        $next = $commentResponse['paging']['cursors']['after'];
+                        getAllComment($groupId, $postId, $next, $list);
+                    }
+
+                    return $list;
                 }
 
                 foreach ($allUrl as $url) :
@@ -66,19 +91,17 @@
                     // lấy id bài viết
                     $postId = $urlArr[1];
 
-                    if(isset($_POST["allcomment"]) && $_POST["allcomment"] === "yes") {
-                        $filter = "stream";
-                    } else {
-                        $filter = "toplevel";
-                    }
-
                     if(isset($_POST["countcomment"]) && $_POST["countcomment"] === "yes") {
-                        $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=1000&access_token=$accessToken";
+                        $commentApi = "https://graph.facebook.com/v11.0/".$groupId."_".$postId."/comments?summary=1&filter=$filter&limit=1&access_token=$accessToken";
                         $commentResponse = json_decode(file_get_contents($commentApi), true);
+
+                        $allCommentData = getAllComment($groupId, $postId, '');
                         $commentHasTextNum = 0;
-                        foreach ($commentResponse['data'] as $item2) {
-                            if(preg_match('/[a-zA-Z0-9]/',$item2['message'])) {
-                                $commentHasTextNum++;
+                        foreach ($allCommentData as $item2) {
+                            foreach ($item2 as $comment) {
+                                if(preg_match('/[a-zA-Z0-9]/',$comment['message'])) {
+                                    $commentHasTextNum++;
+                                }
                             }
                         }
                     }
